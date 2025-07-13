@@ -10,7 +10,7 @@ dotenv.load_dotenv("../..")
 
 def get_response(
   context: str, 
-  client=genai.Client(api_key="api-key-example"), 
+  client=genai.Client(api_key="AIzaSyC3ASGq0nHXZqOBNSCzBZXYk0BuafvDlBQ"), 
   model='gemini-2.5-flash-lite-preview-06-17', 
   temperature=0.1, 
   thinking=True, 

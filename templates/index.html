@@ -198,11 +198,14 @@
 
         extractiveBtn.addEventListener("click", function () {
           currentMode = "extractive";
+          console.log("Current mode set to:", currentMode);
+          
           updateModeButtons();
         });
 
         abstractiveBtn.addEventListener("click", function () {
           currentMode = "abstractive";
+          console.log("Current mode set to:", currentMode); 
           updateModeButtons();
         });
       });
@@ -381,21 +384,18 @@
           return "No summary available.";
         }
 
-        const mode = currentMode === "extractive" ? 0 : 1;
+        const mode = currentMode == "extractive" ? 0 : 1;
 
-        const queryParams = new URLSearchParams({
-          text: inputText,
-          mode: mode,
-        });
-
-        const url = `/summarize?${queryParams.toString()}`;
-
+        const url = `/summarize`;
+        console.log({ text: inputText, mode: mode });
+        
         try {
           const res = await fetch(url, {
-            method: "GET",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({ text: inputText, mode: mode }),
           });
 
           const data = await res.json();

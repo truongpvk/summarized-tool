@@ -15,15 +15,20 @@ def index():
 # Read input and summarize text
 @app.route('/summarize', methods=["POST", "GET"])
 def summarize():
-  text = request.args.get('text', '')
-  mode = request.args.get('mode', '0')
+  import json
+  
+  data = request.get_json()
+  text = data.get('text', '')
+  mode = data.get('mode', '0')
   
   if not text.strip():
     return jsonify({"error": "No text provided"}), 400
 
-  if mode == '0':
+  if mode == 0:
+    print("Extractive!")
     summary = extract_top_n_sentences(text, n=3)
   else:
+    print("Abstractive!")
     summary = get_response(create_prompt(text))
   
   return jsonify({
