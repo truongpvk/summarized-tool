@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import os
+from summarizer.extractive.model import extract_top_n_sentences
+from summarizer.abstractive.model import create_prompt, get_response
 
 template_folder = os.path.join("templates")
 
@@ -20,9 +22,9 @@ def summarize():
     return jsonify({"error": "No text provided"}), 400
 
   if mode == '0':
-    summary = "This is a mock extractive summary of your input."
+    summary = extract_top_n_sentences(text, n=3)
   else:
-    summary = "This is a mock abstractive summary rewritten in natural language."
+    summary = get_response(create_prompt(text))
   
   return jsonify({
     "summary": summary,
@@ -37,9 +39,9 @@ def summarize():
 def save():
   import json
   
-  path = os.path.join("Summarizer", "log_data", "response.json")
+  path = os.path.join("summarizer", "log_data", "response.json")
   try:
-    with open(path, 'w', encoding='utf-8') as f:
+    with open(path, 'r', encoding='utf-8') as f:
       log = json.load(f)
     
     if not log:
@@ -51,7 +53,6 @@ def save():
   try:
     data = request.get_json()
 
-    # Lấy các trường từ JSON
     input_text = data.get('input')
     response_text = data.get('response')
     mode = data.get('mode')
